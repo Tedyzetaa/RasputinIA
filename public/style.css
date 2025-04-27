@@ -1,174 +1,233 @@
-/* Fonte global e fundo */
+/* Fonte e fundo */
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   font-family: 'Inter', sans-serif;
-  background: url('img/wallpaper.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: url('./img/wallpaper.jpg.jpeg') no-repeat center/cover fixed; /* Ou o gradiente que preferir */
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.app-container {
-  display: grid;
-  grid-template-areas: "chat";
-  grid-template-columns: 1fr;
-  width: 100%;
-  max-width: 600px; /* Limita a largura da caixa */
-  height: 80vh;
-  padding: 20px;
+/* Sidebar */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 280px; /* Largura da sidebar */
+  padding: 16px;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  overflow-y: auto;
   box-sizing: border-box;
-  gap: 20px;
-}
-
-/* Painel de chat */
-.chat-panel {
-  grid-area: chat;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.new-convo-form {
+  display: flex; gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+.new-convo-form input {
+  flex: 1; padding: 10px 12px;
+  border: 1px solid #ddd; border-radius: 4px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.new-convo-form input:focus {
+  border-color: #6a82fb;
+  box-shadow: 0 0 4px rgba(106, 130, 251, 0.3);
+}
+.new-convo-form button {
+  padding: 8px 12px;
+  border: none;
+  background: #5cb85c;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+.new-convo-form button:hover {
+  background: #4cae4c;
+}
+
+.conversations-list {
+  flex-grow: 1;
+  padding-right: 5px; /* Adiciona um pequeno padding para a barra de scroll da lista */
+}
+
+/* Estilo para a barra de rolagem da lista de conversas (WebKit) */
+.conversations-list::-webkit-scrollbar { width: 8px; }
+.conversations-list::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+.conversations-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; } /* Alça mais clara para não competir com o botão */
+.conversations-list::-webkit-scrollbar-thumb:hover { background: #bbb; }
+/* Estilo para a barra de rolagem da lista de conversas (Firefox) */
+.conversations-list { scrollbar-width: thin; scrollbar-color: #ccc #f1f1f1; }
+
+
+/* Estilo do contêiner do item da conversa (agora DIV) */
+.conversation-item {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer; /* Cursor de ponteiro para indicar que é clicável */
+  transition: background 0.2s, border-color 0.2s;
+  color: #555;
+  font-size: 0.95rem;
+  display: flex; /* Usando flexbox para o layout interno */
+  justify-content: space-between; /* Espaça o título do botão de excluir */
+  align-items: center; /* Alinha verticalmente */
+}
+.conversation-item:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+.conversation-item.active {
+  background: #6a82fb;
+  color: #fff;
+  border-color: #6a82fb;
+  font-weight: 600;
+}
+
+/* Estilo para o título da conversa dentro do item (span) */
+.conversation-item span:first-child {
+  flex-grow: 1; /* Permite que o título ocupe o espaço */
+  margin-right: 10px; /* Espaço entre o título e o botão de excluir */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* Estilo do botão/ícone de excluir */
+.delete-conv-btn {
+  background: none; /* Sem fundo */
+  border: none; /* Sem borda */
+  color: #ccc; /* Cor padrão cinza */
+  cursor: pointer;
+  font-size: 0.9rem; /* Tamanho do ícone */
+  padding: 0 5px; /* Padding pequeno */
+  margin-left: 5px; /* Margem à esquerda */
+  opacity: 0; /* Começa invisível */
+  transition: color 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0; /* Evita que o botão encolha */
+  line-height: 1; /* Garante que o ícone não afete a altura da linha */
+}
+
+/* Mostra o botão de excluir ao passar o mouse sobre o item da conversa */
+.conversation-item:hover .delete-conv-btn {
+  opacity: 1; /* Torna visível */
+  color: #e74c3c; /* Cor vermelha ao passar o mouse */
+}
+
+.delete-conv-btn:hover {
+  color: #c0392b !important; /* Cor vermelha mais escura ao passar o mouse diretamente sobre ele */
+}
+
+
+/* Container principal da aplicação - Posicionado à direita da sidebar */
+.app-container {
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  max-width: none;
+  height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Painel de chat - Tornando transparente */
+.chat-panel {
+  display: flex; flex-direction: column;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 0;
+  box-shadow: none;
   padding: 20px;
   height: 100%;
   box-sizing: border-box;
 }
-
 #chat-container {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 15px;
-  padding-right: 10px;
+  flex: 1; overflow-y: auto; margin-bottom: 15px;
+  padding-right: 0;
+  padding-left: 0;
   padding-bottom: 15px;
   scroll-behavior: smooth;
+
+  /* Opcional: Adicionar padding interno se quiser um espaço entre as mensagens e as bordas do chat-panel */
+  /* padding: 0 20px 15px 20px; */
 }
 
-/* Estilo para a barra de rolagem (WebKit - Chrome, Safari) */
-#chat-container::-webkit-scrollbar {
-  width: 8px;
-}
+/* Scroll personalizado (Mantido e aplicado ao #chat-container) */
+#chat-container::-webkit-scrollbar { width: 8px; }
+#chat-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+#chat-container::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+#chat-container::-webkit-scrollbar-thumb:hover { background: #555; }
+#chat-container { scrollbar-width: thin; scrollbar-color: #888 #f1f1f1; }
 
-#chat-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-#chat-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-#chat-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Estilo para a barra de rolagem (Firefox) */
-#chat-container {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
-/* Balões de mensagem */
+/* Balões */
 .message {
   max-width: 75%;
   padding: 12px 18px;
-  margin: 10px 0;
-  border-radius: 22px;
-  word-wrap: break-word;
-  line-height: 1.5;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-  opacity: 0;
-  transform: translateY(20px);
+  margin: 10px auto; /* Centralizado horizontalmente */
+  border-radius: 22px; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  opacity: 0; transform: translateY(20px);
   animation: fadeInMessage 0.5s ease forwards;
+  align-self: center; /* Centraliza o balão */
 }
-
-@keyframes fadeInMessage {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+@keyframes fadeInMessage { to { opacity:1; transform:translateY(0); } }
 
 /* Estilo específico para mensagens do usuário */
 .message.user {
   background: linear-gradient(135deg, #6a82fb, #fc5c7d);
   color: #fff;
-  align-self: flex-end;
-  margin-left: auto;
   border-bottom-right-radius: 6px;
   text-align: left;
 }
-
 /* Estilo específico para mensagens do bot */
 .message.model {
-  background: #f0f0f0;
-  color: #333;
-  align-self: flex-start;
+  background: #f0f0f0; color: #333;
   border-bottom-left-radius: 6px;
   text-align: left;
 }
 
-/* Formulário de envio */
-.chat-form {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+/* Form de envio no chat-panel */
+.chat-panel .chat-form {
+  display: flex; gap: 10px; align-items: center;
+  padding-right: 0; /* Remover padding se quiser input/botão encostados na borda */
+  padding-left: 0; /* Remover padding se quiser input/botão encostados na borda */
 }
-
-.chat-form input {
-  flex: 1;
-  padding: 14px 20px;
-  border: 1px solid #ddd;
-  border-radius: 30px;
+.chat-panel .chat-form input {
+  flex: 1; padding: 14px 20px; border: 1px solid #ddd;
+  border-radius: 30px; font-size: 1rem;
   outline: none;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color .3s, box-shadow .3s;
 }
-
-.chat-form input:focus {
-  border-color: #6a82fb;
-  box-shadow: 0 0 8px rgba(106, 130, 251, 0.3);
+.chat-panel .chat-form input:focus {
+  border-color: #6a82fb; box-shadow: 0 0 8px rgba(106,130,251,0.3);
 }
-
-.chat-form button {
-  padding: 10px 25px;
-  border: none;
-  border-radius: 30px;
+.chat-panel .chat-form button {
+  padding: 10px 25px; border: none; border-radius: 30px;
   background: linear-gradient(135deg, #6a82fb, #fc5c7d);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s ease;
+  color: #fff; font-weight: 600; cursor: pointer;
+  transition: background .3s, transform .1s;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   flex-shrink: 0;
 }
-
-.chat-form button:hover {
+.chat-panel .chat-form button:hover {
   background: linear-gradient(135deg, #5a71e0, #e04c6d);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
+.chat-panel .chat-form button:active { transform: scale(0.98); }
 
-.chat-form button:active {
-  transform: scale(0.98);
-}
-
-/* Estilos para indicadores de estado */
-.message.thinking {
-  font-style: italic;
-  color: #888;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
 
 .message.error {
-  color: #d9534f;
-  font-weight: bold;
+  color: #d9534f; font-weight: bold;
 }
+
+@keyframes pulse { 0%,100% { opacity:0.6; } 50% { opacity:1; } }

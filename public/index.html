@@ -2,29 +2,33 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot com API e Histórico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chatbot com Múltiplas Conversas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-</head>
+    </head>
 <body>
+    <aside class="sidebar">
+        <form id="new-conversation-form" class="new-convo-form">
+            <input id="new-conversation-title" type="text" placeholder="Nova conversa..." autocomplete="off" required />
+            <button type="submit">➕</button>
+        </form>
+        <div id="conversations-list" class="conversations-list"></div>
+    </aside>
+
     <div class="app-container">
         <main class="chat-panel">
             <div id="chat-container"></div>
             <form id="chat-form" class="chat-form">
-                <input
-                    type="text"
-                    id="user-input"
-                    placeholder="Digite sua mensagem..."
-                    autocomplete="off"
-                    required
-                />
+                <input id="user-input" type="text" placeholder="Digite sua mensagem..." autocomplete="off" required />
                 <button type="submit">Enviar</button>
             </form>
         </main>
     </div>
+
+    <script src="config.js"></script>
     <script src="main.js"></script>
 </body>
 </html>

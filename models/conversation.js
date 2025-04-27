@@ -1,22 +1,23 @@
+// models/conversation.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
 const Conversation = sequelize.define('Conversation', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    messages: {
-        type: DataTypes.JSON,
-        allowNull: false,
-    },
-    sessionId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
+  sessionId: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  messages: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: []
+  }
 }, {
-    tableName: 'conversations',
+  tableName: 'conversations'
 });
 
 module.exports = Conversation;
