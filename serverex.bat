@@ -1,0 +1,1 @@
+start ngrok.exe http http://localhost:3000
